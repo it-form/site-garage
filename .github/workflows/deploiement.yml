@@ -15,29 +15,29 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH-KEY }}
+          key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           source: "./"
-          target: "/var/www/app"
+          target: "/var/www"
       - name: Met en place nginx
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH-KEY }}
+          key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
             if ! command -v nginx >/dev/null 2>&1; then
             apt update -y
             apt install -y nginx
             fi
-            mkdir -p /var/www/app
-            chown -R $USER:$USER /var/www/app
+            mkdir -p /var/www
+            chown -R $USER:$USER /var/www
             tee /etc/nginx/sites-available/app > /dev/null <<EOF
             server {
             listen 80;
             server_name _;
-            root /var/www/app;
+            root /var/www;
             index index.html;
             location / {
             try_files \$uri \$uri/ =404;
